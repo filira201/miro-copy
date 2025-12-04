@@ -1,3 +1,16 @@
+import { AppHeader } from "@/features/header";
+import { ROUTES } from "@/shared/model/routes";
+import { Outlet, useLocation } from "react-router";
+
 export function App() {
-  return <div>Hello World</div>;
+  const location = useLocation();
+
+  const isAuthPage = location.pathname === ROUTES.LOGIN || location.pathname === ROUTES.REGISTER;
+
+  return (
+    <div>
+      {!isAuthPage && <AppHeader />}
+      <Outlet />
+    </div>
+  );
 }
