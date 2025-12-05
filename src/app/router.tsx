@@ -1,10 +1,15 @@
 import { createBrowserRouter, redirect } from "react-router";
 import { ROUTES } from "@/shared/model/routes";
 import { App } from "./app";
+import { Providers } from "./providers";
 
 export const router = createBrowserRouter([
   {
-    element: <App />,
+    element: (
+      <Providers>
+        <App />
+      </Providers>
+    ),
     // Убираю предупреждение No `HydrateFallback` element provided to
     // render during initial hydration, т.к. нету SSR
 
