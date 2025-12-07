@@ -1,15 +1,19 @@
-import { rqClient } from "@/shared/api/instance";
+import { publicRqClient } from "@/shared/api/instance";
 import type { ApiSchemas } from "@/shared/api/schema";
 import { ROUTES } from "@/shared/model/routes";
 import { useNavigate } from "react-router";
+import { useSession } from "@/shared/model/session";
 
 // Бизнес логика для регистрации пользователя, отделенная от UI
 
 export function useRegister() {
   const navigate = useNavigate();
 
-  const registerMutation = rqClient.useMutation("post", "/auth/register", {
-    onSuccess() {
+  const session = useSession();
+
+  const registerMutation = publicRqClient.useMutation("post", "/auth/register", {
+    onSuccess(data) {
+      session.login(data.accessToken);
       navigate(ROUTES.HOME);
     },
   });

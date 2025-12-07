@@ -1,5 +1,6 @@
-import { rqClient } from "@/shared/api/instance";
+import { publicRqClient } from "@/shared/api/instance";
 import { ROUTES } from "@/shared/model/routes";
+import { useSession } from "@/shared/model/session";
 import { useNavigate } from "react-router";
 
 // Бизнес логика для авторизации пользователя, отделенная от UI
@@ -7,8 +8,11 @@ import { useNavigate } from "react-router";
 export function useLogin() {
   const navigate = useNavigate();
 
-  const loginMutation = rqClient.useMutation("post", "/auth/login", {
-    onSuccess() {
+  const session = useSession();
+
+  const loginMutation = publicRqClient.useMutation("post", "/auth/login", {
+    onSuccess(data) {
+      session.login(data.accessToken);
       navigate(ROUTES.HOME);
     },
   });

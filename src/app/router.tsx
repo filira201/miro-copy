@@ -2,6 +2,9 @@ import { createBrowserRouter, redirect } from "react-router";
 import { ROUTES } from "@/shared/model/routes";
 import { App } from "./app";
 import { Providers } from "./providers";
+import { ProtectedRoute } from "./protected-route";
+import { AppHeader } from "@/features/header";
+import { protectedLoader } from "./protected-loader";
 
 export const router = createBrowserRouter([
   {
@@ -16,13 +19,25 @@ export const router = createBrowserRouter([
     HydrateFallback: () => null,
     children: [
       {
-        path: ROUTES.BOARDS,
-        lazy: () => import("@/features/boards-list/boards-list.page"),
+        loader: protectedLoader,
+        element: (
+          <>
+            <AppHeader />
+            <ProtectedRoute />
+          </>
+        ),
+        children: [
+          {
+            path: ROUTES.BOARDS,
+            lazy: () => import("@/features/boards-list/boards-list.page"),
+          },
+          {
+            path: ROUTES.BOARD,
+            lazy: () => import("@/features/board/board.page"),
+          },
+        ],
       },
-      {
-        path: ROUTES.BOARD,
-        lazy: () => import("@/features/board/board.page"),
-      },
+
       {
         path: ROUTES.LOGIN,
         lazy: () => import("@/features/auth/login.page"),
