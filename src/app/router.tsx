@@ -21,15 +21,25 @@ export const router = createBrowserRouter([
       {
         loader: protectedLoader,
         element: (
-          <>
+          <div className="h-screen flex flex-col overflow-hidden">
             <AppHeader />
-            <ProtectedRoute />
-          </>
+            <div className="flex-1 overflow-hidden">
+              <ProtectedRoute />
+            </div>
+          </div>
         ),
         children: [
           {
             path: ROUTES.BOARDS,
             lazy: () => import("@/features/boards-list/boards-list.page"),
+          },
+          {
+            path: ROUTES.FAVORITE_BOARDS,
+            lazy: () => import("@/features/boards-list/boards-list-favorite.page"),
+          },
+          {
+            path: ROUTES.RECENT_BOARDS,
+            lazy: () => import("@/features/boards-list/boards-list-recent.page"),
           },
           {
             path: ROUTES.BOARD,
