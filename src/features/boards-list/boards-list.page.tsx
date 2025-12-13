@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { lazy, Suspense, useState } from "react";
 import { Button } from "@/shared/ui/kit/button";
 import { useBoardsList } from "./model/use-boards-list";
 import { useBoardsFilters } from "./model/use-boards-filters";
@@ -18,6 +18,9 @@ import { BoardsSearchInput } from "./ui/boards-search-input";
 import { BoardItem } from "./compose/board-item";
 import { BoardCard } from "./compose/board-card";
 import { BoardsSidebar } from "./ui/boards-sidebar";
+import { TemplatesGallery, TemplatesModalSkeleton, useTemplatesModal } from "../board-templates";
+
+const TemplatesModal = lazy(() => import("../board-templates/templates-modal"));
 
 function BoardsListPage() {
   const boardsFilters = useBoardsFilters();
@@ -26,13 +29,21 @@ function BoardsListPage() {
     search: useDebouncedValue(boardsFilters.search, 300),
   });
 
+  const templatesModal = useTemplatesModal();
+
   const createBoard = useCreateBoard();
 
   const [viewMode, setViewMode] = useState<ViewMode>("list");
 
   return (
     <>
+      {templatesModal.isOpen && (
+        <Suspense fallback={<TemplatesModalSkeleton />}>
+          <TemplatesModal />
+        </Suspense>
+      )}
       <BoardsListLayout
+        templates={<TemplatesGallery />}
         sidebar={<BoardsSidebar />}
         header={
           <BoardsListLayoutHeader
@@ -40,6 +51,9 @@ function BoardsListPage() {
             description="Здесь вы можете просматривать и управлять своими досками"
             actions={
               <>
+                <Button variant="outline" onClick={() => templatesModal.open()}>
+                  Выбрать шаблон
+                </Button>
                 <Button disabled={createBoard.isPending} onClick={createBoard.createBoard}>
                   <PlusIcon />
                   Создать доску

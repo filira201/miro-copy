@@ -51,14 +51,14 @@ function BoardsListPage() {
               list: (
                 <BoardsListLayoutList>
                   {group.items.map((board) => (
-                    <BoardItem board={board} />
+                    <BoardItem board={board} key={board.id} />
                   ))}
                 </BoardsListLayoutList>
               ),
               cards: (
                 <BoardsListLayoutCards>
                   {group.items.map((board) => (
-                    <BoardCard board={board} />
+                    <BoardCard board={board} key={board.id} />
                   ))}
                 </BoardsListLayoutCards>
               ),
