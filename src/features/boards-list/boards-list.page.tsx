@@ -1,4 +1,4 @@
-import { lazy, Suspense, useState } from "react";
+import { useState } from "react";
 import { Button } from "@/shared/ui/kit/button";
 import { useBoardsList } from "./model/use-boards-list";
 import { useBoardsFilters } from "./model/use-boards-filters";
@@ -18,9 +18,7 @@ import { BoardsSearchInput } from "./ui/boards-search-input";
 import { BoardItem } from "./compose/board-item";
 import { BoardCard } from "./compose/board-card";
 import { BoardsSidebar } from "./ui/boards-sidebar";
-import { TemplatesGallery, TemplatesModalSkeleton, useTemplatesModal } from "../board-templates";
-
-const TemplatesModal = lazy(() => import("../board-templates/templates-modal"));
+import { TemplatesGallery, TemplatesModal, useTemplatesModal } from "../board-templates";
 
 function BoardsListPage() {
   const boardsFilters = useBoardsFilters();
@@ -37,11 +35,7 @@ function BoardsListPage() {
 
   return (
     <>
-      {templatesModal.isOpen && (
-        <Suspense fallback={<TemplatesModalSkeleton />}>
-          <TemplatesModal />
-        </Suspense>
-      )}
+      {templatesModal.isOpen && <TemplatesModal />}
       <BoardsListLayout
         templates={<TemplatesGallery />}
         sidebar={<BoardsSidebar />}
