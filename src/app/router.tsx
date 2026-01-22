@@ -23,7 +23,7 @@ export const router = createBrowserRouter([
         element: (
           <div className="h-screen flex flex-col overflow-hidden">
             <AppHeader />
-            <div className="flex-1 overflow-hidden">
+            <div className="flex-1 flex flex-col overflow-hidden">
               <ProtectedRoute />
             </div>
           </div>
