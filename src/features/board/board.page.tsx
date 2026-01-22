@@ -1,19 +1,38 @@
-import type { PathParams, ROUTES } from "@/shared/model/routes";
 import { Button } from "@/shared/ui/kit/button";
 import { ArrowRightIcon, StickerIcon } from "lucide-react";
-import { useParams } from "react-router";
+import { useNodes } from "./nodes";
+import { useBoardViewState } from "./view-state";
 
 function BoardPage() {
-  const { boardId } = useParams<PathParams[typeof ROUTES.BOARD]>();
+  const { nodes, addSticker } = useNodes();
+  const { viewState, goToIdle, goToAddSticker } = useBoardViewState();
 
   return (
     <Layout>
       <Dots />
-      <Canvas>
-        <Sticker text="Hello" x={100} y={100} />
+      <Canvas
+        onClick={(event) => {
+          if (viewState.type === "add-sticker") {
+            addSticker({ text: "Default", x: event.clientX, y: event.clientY });
+            goToIdle();
+          }
+        }}
+      >
+        {nodes.map((node) => (
+          <Sticker key={node.id} text={node.text} x={node.x} y={node.y} />
+        ))}
       </Canvas>
       <Actions>
-        <ActionButton isActive={false} onClick={() => {}}>
+        <ActionButton
+          isActive={viewState.type === "add-sticker"}
+          onClick={() => {
+            if (viewState.type === "add-sticker") {
+              goToIdle();
+            } else {
+              goToAddSticker();
+            }
+          }}
+        >
           <StickerIcon />
         </ActionButton>
         <ActionButton isActive={false} onClick={() => {}}>
