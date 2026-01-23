@@ -13,7 +13,19 @@ function BoardPage() {
   console.log(canvasRect);
 
   return (
-    <Layout>
+    <Layout
+      onKeyDown={(e) => {
+        if (viewState.type === "add-sticker") {
+          if (e.key === "s") {
+            goToIdle();
+          }
+        } else if (viewState.type === "idle") {
+          if (e.key === "s") {
+            goToAddSticker();
+          }
+        }
+      }}
+    >
       <Dots />
       <Canvas
         ref={canvasRef}
@@ -51,9 +63,9 @@ function BoardPage() {
 
 export const Component = BoardPage;
 
-function Layout({ children }: { children: React.ReactNode }) {
+function Layout({ children, ...props }: { children: React.ReactNode } & React.HTMLAttributes<HTMLDivElement>) {
   return (
-    <div className="grow relative" tabIndex={0}>
+    <div {...props} className="grow relative" tabIndex={0}>
       {children}
     </div>
   );
