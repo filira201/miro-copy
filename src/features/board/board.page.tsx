@@ -4,6 +4,8 @@ import { useNodes } from "./nodes";
 import { useBoardViewState } from "./view-state";
 import { useEffect, useRef, type Ref } from "react";
 import { useCanvasRef } from "./use-canvas-rect";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/shared/ui/kit/tooltip";
+import { Kbd } from "@/shared/ui/kit/kbd";
 
 const useLayoutFocus = () => {
   const layoutRef = useRef<HTMLDivElement>(null);
@@ -42,11 +44,11 @@ function BoardPage() {
       ref={layoutRef}
       onKeyDown={(e) => {
         if (viewState.type === "add-sticker") {
-          if (e.key === "s") {
+          if (e.code === "KeyS") {
             goToIdle();
           }
         } else if (viewState.type === "idle") {
-          if (e.key === "s") {
+          if (e.code === "KeyS") {
             goToAddSticker();
           }
         }
@@ -76,6 +78,11 @@ function BoardPage() {
               goToAddSticker();
             }
           }}
+          tooltipContent={
+            <div className="flex items-center gap-2">
+              Добавить стикер <Kbd>S</Kbd>
+            </div>
+          }
         >
           <StickerIcon />
         </ActionButton>
@@ -139,13 +146,15 @@ function Actions({ children }: { children: React.ReactNode }) {
 function ActionButton({
   children,
   isActive,
+  tooltipContent,
   onClick,
 }: {
   children: React.ReactNode;
   isActive: boolean;
+  tooltipContent?: React.ReactNode;
   onClick: () => void;
 }) {
-  return (
+  const button = (
     <Button
       variant="ghost"
       size="icon"
@@ -154,5 +163,16 @@ function ActionButton({
     >
       {children}
     </Button>
+  );
+
+  if (!tooltipContent) {
+    return button;
+  }
+
+  return (
+    <Tooltip>
+      <TooltipTrigger asChild>{button}</TooltipTrigger>
+      <TooltipContent>{tooltipContent}</TooltipContent>
+    </Tooltip>
   );
 }
