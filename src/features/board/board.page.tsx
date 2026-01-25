@@ -1,55 +1,33 @@
 import { Button } from "@/shared/ui/kit/button";
 import { ArrowRightIcon, StickerIcon } from "lucide-react";
 import { useNodes } from "./nodes";
-import { useBoardViewState } from "./view-state";
-import { useEffect, useRef, type Ref } from "react";
+import { useViewModel } from "./view-model";
+import { type Ref } from "react";
 import { useCanvasRef } from "./use-canvas-rect";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/shared/ui/kit/tooltip";
 import { Kbd } from "@/shared/ui/kit/kbd";
-
-const useLayoutFocus = () => {
-  const layoutRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (layoutRef.current) {
-      layoutRef.current.focus();
-    }
-
-    const handleVisibilityChange = () => {
-      if (document.visibilityState === "visible") {
-        layoutRef.current?.focus();
-      }
-    };
-
-    document.addEventListener("visibilitychange", handleVisibilityChange);
-
-    return () => {
-      document.removeEventListener("visibilitychange", handleVisibilityChange);
-    };
-  }, []);
-
-  return layoutRef;
-};
+import { useLayoutFocus } from "./use-layout-focus";
+import { cn } from "@/shared/lib/css";
 
 function BoardPage() {
   const { nodes, addSticker } = useNodes();
-  const { viewState, goToIdle, goToAddSticker } = useBoardViewState();
+  const viewModel = useViewModel();
   const { canvasRef, canvasRect } = useCanvasRef();
-  const layoutRef = useLayoutFocus();
+  const focusLayoutRef = useLayoutFocus();
 
   console.log(canvasRect);
 
   return (
     <Layout
-      ref={layoutRef}
+      ref={focusLayoutRef}
       onKeyDown={(e) => {
-        if (viewState.type === "add-sticker") {
+        if (viewModel.viewState.type === "add-sticker") {
           if (e.code === "KeyS") {
-            goToIdle();
+            viewModel.goToIdle();
           }
-        } else if (viewState.type === "idle") {
+        } else if (viewModel.viewState.type === "idle") {
           if (e.code === "KeyS") {
-            goToAddSticker();
+            viewModel.goToAddSticker();
           }
         }
       }}
@@ -58,24 +36,41 @@ function BoardPage() {
       <Canvas
         ref={canvasRef}
         onClick={(event) => {
-          if (viewState.type === "add-sticker" && canvasRect) {
+          if (viewModel.viewState.type === "add-sticker" && canvasRect) {
             addSticker({ text: "Default", x: event.clientX - canvasRect.x, y: event.clientY - canvasRect.y });
-            goToIdle();
+            viewModel.goToIdle();
           }
         }}
       >
         {nodes.map((node) => (
-          <Sticker key={node.id} text={node.text} x={node.x} y={node.y} />
+          <Sticker
+            key={node.id}
+            text={node.text}
+            x={node.x}
+            y={node.y}
+            selected={viewModel.viewState.type === "idle" && viewModel.viewState.selectedIds.has(node.id)}
+            onClick={(e) => {
+              console.log(e);
+
+              if (viewModel.viewState.type === "idle") {
+                if (e.ctrlKey || e.shiftKey || e.metaKey) {
+                  viewModel.selection([node.id], "toggle");
+                } else {
+                  viewModel.selection([node.id], "replace");
+                }
+              }
+            }}
+          />
         ))}
       </Canvas>
       <Actions>
         <ActionButton
-          isActive={viewState.type === "add-sticker"}
+          isActive={viewModel.viewState.type === "add-sticker"}
           onClick={() => {
-            if (viewState.type === "add-sticker") {
-              goToIdle();
+            if (viewModel.viewState.type === "add-sticker") {
+              viewModel.goToIdle();
             } else {
-              goToAddSticker();
+              viewModel.goToAddSticker();
             }
           }}
           tooltipContent={
@@ -124,14 +119,27 @@ function Canvas({
   );
 }
 
-function Sticker({ text, x, y }: { text: string; x: number; y: number }) {
+function Sticker({
+  text,
+  x,
+  y,
+  onClick,
+  selected,
+}: {
+  text: string;
+  x: number;
+  y: number;
+  onClick: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  selected: boolean;
+}) {
   return (
-    <div
-      className="absolute bg-yellow-300 px-2 py-4 rounded-xs shadow-md"
+    <button
+      onClick={onClick}
+      className={cn("absolute bg-yellow-300 px-2 py-4 rounded-xs shadow-md", selected && "outline-2 outline-blue-500")}
       style={{ transform: `translate(${x}px, ${y}px)` }}
     >
       {text}
-    </div>
+    </button>
   );
 }
 
