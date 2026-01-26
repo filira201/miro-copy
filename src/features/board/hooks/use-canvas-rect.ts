@@ -1,6 +1,6 @@
 import { useCallback, useState, type RefCallback } from "react";
 
-type CanvasRef = {
+export type CanvasRect = {
   x: number;
   y: number;
   width: number;
@@ -8,7 +8,7 @@ type CanvasRef = {
 };
 
 export const useCanvasRef = () => {
-  const [canvasRect, setCanvasRect] = useState<CanvasRef>();
+  const [canvasRect, setCanvasRect] = useState<CanvasRect>();
 
   const canvasRef: RefCallback<HTMLDivElement> = useCallback((el) => {
     const observer = new ResizeObserver((entries) => {

@@ -1,78 +1,42 @@
 import { Button } from "@/shared/ui/kit/button";
 import { ArrowRightIcon, StickerIcon } from "lucide-react";
-import { useNodes } from "./nodes";
-import { useViewModel } from "./view-model";
+import { useNodes } from "./model/nodes";
+import { useViewState } from "./model/view-state";
 import { type Ref } from "react";
-import { useCanvasRef } from "./use-canvas-rect";
+import { useCanvasRef } from "./hooks/use-canvas-rect";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/shared/ui/kit/tooltip";
 import { Kbd } from "@/shared/ui/kit/kbd";
-import { useLayoutFocus } from "./use-layout-focus";
+import { useLayoutFocus } from "./hooks/use-layout-focus";
 import { cn } from "@/shared/lib/css";
+import { useViewModel } from "./view-model/use-view-model";
 
 function BoardPage() {
-  const { nodes, addSticker } = useNodes();
-  const viewModel = useViewModel();
-  const { canvasRef, canvasRect } = useCanvasRef();
+  const nodesModel = useNodes();
+  const viewStateModel = useViewState();
   const focusLayoutRef = useLayoutFocus();
+  const { canvasRef, canvasRect } = useCanvasRef();
 
-  console.log(canvasRect);
+  const viewModel = useViewModel({ viewStateModel, nodesModel, canvasRect });
 
   return (
-    <Layout
-      ref={focusLayoutRef}
-      onKeyDown={(e) => {
-        if (viewModel.viewState.type === "add-sticker") {
-          if (e.code === "KeyS") {
-            viewModel.goToIdle();
-          }
-        } else if (viewModel.viewState.type === "idle") {
-          if (e.code === "KeyS") {
-            viewModel.goToAddSticker();
-          }
-        }
-      }}
-    >
+    <Layout ref={focusLayoutRef} onKeyDown={viewModel.layout?.onKeyDown}>
       <Dots />
-      <Canvas
-        ref={canvasRef}
-        onClick={(event) => {
-          if (viewModel.viewState.type === "add-sticker" && canvasRect) {
-            addSticker({ text: "Default", x: event.clientX - canvasRect.x, y: event.clientY - canvasRect.y });
-            viewModel.goToIdle();
-          }
-        }}
-      >
-        {nodes.map((node) => (
+      <Canvas ref={canvasRef} onClick={viewModel.canvas?.onClick}>
+        {viewModel.nodes.map((node) => (
           <Sticker
             key={node.id}
             text={node.text}
             x={node.x}
             y={node.y}
-            selected={viewModel.viewState.type === "idle" && viewModel.viewState.selectedIds.has(node.id)}
-            onClick={(e) => {
-              console.log(e);
-
-              if (viewModel.viewState.type === "idle") {
-                if (e.ctrlKey || e.shiftKey || e.metaKey) {
-                  viewModel.selection([node.id], "toggle");
-                } else {
-                  viewModel.selection([node.id], "replace");
-                }
-              }
-            }}
+            selected={node.isSelected}
+            onClick={node.onClick}
           />
         ))}
       </Canvas>
       <Actions>
         <ActionButton
-          isActive={viewModel.viewState.type === "add-sticker"}
-          onClick={() => {
-            if (viewModel.viewState.type === "add-sticker") {
-              viewModel.goToIdle();
-            } else {
-              viewModel.goToAddSticker();
-            }
-          }}
+          isActive={viewModel.actions?.addSticker?.isActive}
+          onClick={viewModel.actions?.addSticker?.onClick}
           tooltipContent={
             <div className="flex items-center gap-2">
               Добавить стикер <Kbd>S</Kbd>
@@ -129,8 +93,8 @@ function Sticker({
   text: string;
   x: number;
   y: number;
-  onClick: (e: React.MouseEvent<HTMLButtonElement>) => void;
-  selected: boolean;
+  onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  selected?: boolean;
 }) {
   return (
     <button
@@ -158,9 +122,9 @@ function ActionButton({
   onClick,
 }: {
   children: React.ReactNode;
-  isActive: boolean;
+  isActive?: boolean;
   tooltipContent?: React.ReactNode;
-  onClick: () => void;
+  onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
 }) {
   const button = (
     <Button
