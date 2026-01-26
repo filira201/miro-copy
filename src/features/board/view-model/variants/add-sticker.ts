@@ -1,4 +1,5 @@
-import type { ViewModel, ViewModelParams } from "../use-view-model";
+import type { ViewModelParams } from "../view-model-params";
+import type { ViewModel } from "../view-model-type";
 
 export function useAddStickerViewModel({ viewStateModel, nodesModel, canvasRect }: ViewModelParams) {
   return (): ViewModel => ({
