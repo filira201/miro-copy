@@ -1,7 +1,11 @@
 import { type ApiSchemas } from "../../schema";
 import { http } from "../http";
 import { delay, HttpResponse } from "msw";
-import { createRefreshTokenCookie, generateTokens, verifyToken } from "../session";
+import {
+  createRefreshTokenCookie,
+  generateTokens,
+  verifyToken,
+} from "../session";
 
 const userPasswords = new Map<string, string>();
 const mockUsers: ApiSchemas["User"][] = [
@@ -32,7 +36,10 @@ export const authHandlers = [
       );
     }
 
-    const { accessToken, refreshToken } = await generateTokens({ userId: user.id, email: user.email });
+    const { accessToken, refreshToken } = await generateTokens({
+      userId: user.id,
+      email: user.email,
+    });
     return HttpResponse.json(
       {
         accessToken: accessToken,
@@ -67,7 +74,10 @@ export const authHandlers = [
       email: body.email,
     };
 
-    const { accessToken, refreshToken } = await generateTokens({ userId: newUser.id, email: newUser.email });
+    const { accessToken, refreshToken } = await generateTokens({
+      userId: newUser.id,
+      email: newUser.email,
+    });
 
     mockUsers.push(newUser);
     userPasswords.set(body.email, body.password);
@@ -107,10 +117,11 @@ export const authHandlers = [
         throw new Error("User not found");
       }
 
-      const { accessToken, refreshToken: newRefreshToken } = await generateTokens({
-        userId: user.id,
-        email: user.email,
-      });
+      const { accessToken, refreshToken: newRefreshToken } =
+        await generateTokens({
+          userId: user.id,
+          email: user.email,
+        });
 
       return HttpResponse.json(
         {

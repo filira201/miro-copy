@@ -10,7 +10,9 @@ export function useCreateBoard() {
 
   const createBoardMutation = rqClient.useMutation("post", "/boards", {
     onSettled: async () => {
-      await queryClient.invalidateQueries(rqClient.queryOptions("get", "/boards"));
+      await queryClient.invalidateQueries(
+        rqClient.queryOptions("get", "/boards")
+      );
     },
     onSuccess: (data) => {
       navigate(href(ROUTES.BOARD, { boardId: data.id }));

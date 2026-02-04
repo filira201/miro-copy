@@ -21,7 +21,9 @@ export function useLogin() {
     loginMutation.mutate({ body: data });
   };
 
-  const errorMessage = loginMutation.isError ? loginMutation.error.message : undefined;
+  const errorMessage = loginMutation.isError
+    ? loginMutation.error.message
+    : undefined;
 
   return { login, isPending: loginMutation.isPending, errorMessage };
 }

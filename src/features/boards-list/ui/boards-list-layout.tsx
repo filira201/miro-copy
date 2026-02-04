@@ -18,7 +18,9 @@ export function BoardsListLayout({
     <div className="h-full flex overflow-hidden">
       {sidebar}
       <div className="flex-1 p-4 flex flex-col gap-6 overflow-y-auto">
-        {templates && <div className="rounded-md bg-gray-100 p-4">{templates}</div>}
+        {templates && (
+          <div className="rounded-md bg-gray-100 p-4">{templates}</div>
+        )}
         {header}
         {filters}
         {children}
@@ -60,7 +62,9 @@ export function BoardsListLayoutFilters({
     <div className="flex items-center gap-4">
       {filters && (
         <div className="flex items-center gap-2">
-          <div className="text-sm text-gray-500 whitespace-nowrap">Filter by</div>
+          <div className="text-sm text-gray-500 whitespace-nowrap">
+            Filter by
+          </div>
           {filters}
         </div>
       )}
@@ -99,11 +103,17 @@ export function BoardsListLayoutContent({
   return (
     <div>
       {isPending && <div className="text-center py-10">Загрузка...</div>}
-      {mode === "list" && renderList && <BoardsListLayoutList>{renderList?.()}</BoardsListLayoutList>}
-      {mode === "cards" && renderGrid && <BoardsListLayoutCards>{renderGrid?.()}</BoardsListLayoutCards>}
+      {mode === "list" && renderList && (
+        <BoardsListLayoutList>{renderList?.()}</BoardsListLayoutList>
+      )}
+      {mode === "cards" && renderGrid && (
+        <BoardsListLayoutCards>{renderGrid?.()}</BoardsListLayoutCards>
+      )}
       {!isPending && children}
 
-      {isEmpty && !isPending && <div className="text-center py-10">Доски не найдены</div>}
+      {isEmpty && !isPending && (
+        <div className="text-center py-10">Доски не найдены</div>
+      )}
 
       {hasCursor && (
         <div ref={cursorRef} className="text-center py-8">
@@ -129,11 +139,23 @@ export function BoardsListLayoutContent({
   );
 }
 
-export function BoardsListLayoutCards({ children }: { children: React.ReactNode }) {
-  return <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">{children}</div>;
+export function BoardsListLayoutCards({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {children}
+    </div>
+  );
 }
 
-export function BoardsListLayoutList({ children }: { children: React.ReactNode }) {
+export function BoardsListLayoutList({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return <div className="flex flex-col gap-2">{children}</div>;
 }
 

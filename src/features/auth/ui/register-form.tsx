@@ -1,5 +1,12 @@
 import { Button } from "@/shared/ui/kit/button";
-import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/shared/ui/kit/form";
+import {
+  Form,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormControl,
+  FormMessage,
+} from "@/shared/ui/kit/form";
 import { Input } from "@/shared/ui/kit/input";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -9,8 +16,12 @@ import { Spinner } from "@/shared/ui/kit/spinner";
 
 const registerSchema = z
   .object({
-    email: z.string({ error: "Email является обязательным" }).email("Неверный email"),
-    password: z.string({ error: "Пароль является обязательным" }).min(6, "Пароль должен содержать не мнее 6 символов"),
+    email: z
+      .string({ error: "Email является обязательным" })
+      .email("Неверный email"),
+    password: z
+      .string({ error: "Пароль является обязательным" })
+      .min(6, "Пароль должен содержать не мнее 6 символов"),
     confirmPassword: z
       .string({ error: "Подтверждение пароля является обязательным" })
       .min(6, "Подтверждение пароля должен содержать не мнее 6 символов"),
@@ -75,7 +86,9 @@ export function RegisterForm() {
           )}
         />
 
-        {errorMessage && <p className="text-destructive text-sm">{errorMessage}</p>}
+        {errorMessage && (
+          <p className="text-destructive text-sm">{errorMessage}</p>
+        )}
 
         <Button disabled={isPending} type="submit">
           {isPending && <Spinner />}

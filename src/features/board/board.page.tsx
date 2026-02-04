@@ -3,7 +3,11 @@ import { ArrowRightIcon, StickerIcon } from "lucide-react";
 import { useNodes } from "./model/nodes";
 import { type Ref } from "react";
 import { useCanvasRef } from "./hooks/use-canvas-rect";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/shared/ui/kit/tooltip";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/shared/ui/kit/tooltip";
 import { Kbd } from "@/shared/ui/kit/kbd";
 import { useLayoutFocus } from "./hooks/use-layout-focus";
 import { cn } from "@/shared/lib/css";
@@ -40,7 +44,9 @@ function BoardPage() {
           />
         ))}
       </Canvas>
-      {viewModel.selectionWindow && <SelectionWindow {...viewModel.selectionWindow} />}
+      {viewModel.selectionWindow && (
+        <SelectionWindow {...viewModel.selectionWindow} />
+      )}
       <Actions>
         <ActionButton
           isActive={viewModel.actions?.addSticker?.isActive}
@@ -81,14 +87,24 @@ function Overlay({
   onMouseDown?: (e: React.MouseEvent<HTMLDivElement>) => void;
   onMouseUp?: (e: React.MouseEvent<HTMLDivElement>) => void;
 }) {
-  return <div className="absolute inset-0" onClick={onClick} onMouseDown={onMouseDown} onMouseUp={onMouseUp}></div>;
+  return (
+    <div
+      className="absolute inset-0"
+      onClick={onClick}
+      onMouseDown={onMouseDown}
+      onMouseUp={onMouseUp}
+    ></div>
+  );
 }
 
 function Layout({
   children,
   ref,
   ...props
-}: { children: React.ReactNode; ref: Ref<HTMLDivElement> } & React.HTMLAttributes<HTMLDivElement>) {
+}: {
+  children: React.ReactNode;
+  ref: Ref<HTMLDivElement>;
+} & React.HTMLAttributes<HTMLDivElement>) {
   return (
     <div {...props} ref={ref} className="grow relative" tabIndex={0}>
       {children}
@@ -97,14 +113,19 @@ function Layout({
 }
 
 function Dots() {
-  return <div className="absolute inset-0 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] bg-size-[16px_16px]"></div>;
+  return (
+    <div className="absolute inset-0 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] bg-size-[16px_16px]"></div>
+  );
 }
 
 function Canvas({
   children,
   ref,
   ...props
-}: { children: React.ReactNode; ref: Ref<HTMLDivElement> } & React.HTMLAttributes<HTMLDivElement>) {
+}: {
+  children: React.ReactNode;
+  ref: Ref<HTMLDivElement>;
+} & React.HTMLAttributes<HTMLDivElement>) {
   return (
     <div {...props} ref={ref} className="absolute inset-0">
       {children}
@@ -128,7 +149,10 @@ function Sticker({
   return (
     <button
       onClick={onClick}
-      className={cn("absolute bg-yellow-300 px-2 py-4 rounded-xs shadow-md", selected && "outline-2 outline-blue-500")}
+      className={cn(
+        "absolute bg-yellow-300 px-2 py-4 rounded-xs shadow-md",
+        selected && "outline-2 outline-blue-500"
+      )}
       style={{ transform: `translate(${x}px, ${y}px)` }}
     >
       {text}
@@ -159,7 +183,11 @@ function ActionButton({
     <Button
       variant="ghost"
       size="icon"
-      className={isActive ? "bg-blue-500/30 hover:bg-blue-600/30 text-blue-500 hover:text-blue-600" : ""}
+      className={
+        isActive
+          ? "bg-blue-500/30 hover:bg-blue-600/30 text-blue-500 hover:text-blue-600"
+          : ""
+      }
       onClick={onClick}
     >
       {children}

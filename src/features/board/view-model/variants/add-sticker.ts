@@ -6,7 +6,11 @@ export type AddStickerState = {
   type: "add-sticker";
 };
 
-export function useAddStickerViewModel({ setViewState, nodesModel, canvasRect }: ViewModelParams) {
+export function useAddStickerViewModel({
+  setViewState,
+  nodesModel,
+  canvasRect,
+}: ViewModelParams) {
   return (): ViewModel => ({
     nodes: nodesModel.nodes,
     layout: {
@@ -19,7 +23,11 @@ export function useAddStickerViewModel({ setViewState, nodesModel, canvasRect }:
     canvas: {
       onClick: (e) => {
         if (!canvasRect) return;
-        nodesModel.addSticker({ text: "Default", x: e.clientX - canvasRect.x, y: e.clientY - canvasRect.y });
+        nodesModel.addSticker({
+          text: "Default",
+          x: e.clientX - canvasRect.x,
+          y: e.clientY - canvasRect.y,
+        });
         setViewState(goToIdle());
       },
     },

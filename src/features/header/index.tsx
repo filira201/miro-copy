@@ -12,8 +12,15 @@ export function AppHeader() {
 
         {session ? (
           <div className="flex items-center gap-4">
-            <span className="text-sm text-muted-foreground">{session.email}</span>
-            <Button variant="outline" size="sm" onClick={() => logout()} className="hover:bg-destructive/10">
+            <span className="text-sm text-muted-foreground">
+              {session.email}
+            </span>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => logout()}
+              className="hover:bg-destructive/10"
+            >
               Выйти
             </Button>
           </div>

@@ -18,7 +18,11 @@ import { BoardsSearchInput } from "./ui/boards-search-input";
 import { BoardItem } from "./compose/board-item";
 import { BoardCard } from "./compose/board-card";
 import { BoardsSidebar } from "./ui/boards-sidebar";
-import { TemplatesGallery, TemplatesModal, useTemplatesModal } from "../board-templates";
+import {
+  TemplatesGallery,
+  TemplatesModal,
+  useTemplatesModal,
+} from "../board-templates";
 
 function BoardsListPage() {
   const boardsFilters = useBoardsFilters();
@@ -48,7 +52,10 @@ function BoardsListPage() {
                 <Button variant="outline" onClick={() => templatesModal.open()}>
                   Выбрать шаблон
                 </Button>
-                <Button disabled={createBoard.isPending} onClick={createBoard.createBoard}>
+                <Button
+                  disabled={createBoard.isPending}
+                  onClick={createBoard.createBoard}
+                >
                   <PlusIcon />
                   Создать доску
                 </Button>
@@ -58,9 +65,24 @@ function BoardsListPage() {
         }
         filters={
           <BoardsListLayoutFilters
-            sort={<BoardsSortSelect value={boardsFilters.sort} onValueChange={boardsFilters.setSort} />}
-            filters={<BoardsSearchInput value={boardsFilters.search} onChange={boardsFilters.setSearch} />}
-            actions={<ViewModeToggle value={viewMode} onChange={(value) => setViewMode(value)} />}
+            sort={
+              <BoardsSortSelect
+                value={boardsFilters.sort}
+                onValueChange={boardsFilters.setSort}
+              />
+            }
+            filters={
+              <BoardsSearchInput
+                value={boardsFilters.search}
+                onChange={boardsFilters.setSearch}
+              />
+            }
+            actions={
+              <ViewModeToggle
+                value={viewMode}
+                onChange={(value) => setViewMode(value)}
+              />
+            }
           />
         }
       >
@@ -71,8 +93,16 @@ function BoardsListPage() {
           cursorRef={boardsQuery.cursorRef}
           hasCursor={boardsQuery.hasNextPage}
           mode={viewMode}
-          renderList={() => boardsQuery.boards.map((board) => <BoardItem key={board.id} board={board} />)}
-          renderGrid={() => boardsQuery.boards.map((board) => <BoardCard key={board.id} board={board} />)}
+          renderList={() =>
+            boardsQuery.boards.map((board) => (
+              <BoardItem key={board.id} board={board} />
+            ))
+          }
+          renderGrid={() =>
+            boardsQuery.boards.map((board) => (
+              <BoardCard key={board.id} board={board} />
+            ))
+          }
         />
       </BoardsListLayout>
     </>

@@ -13,7 +13,11 @@ export type SelectionWindowViewState = {
   initialSelectedIds: Set<string>;
 };
 
-export function useSelectionWindowViewModel({ setViewState, nodesModel, canvasRect }: ViewModelParams) {
+export function useSelectionWindowViewModel({
+  setViewState,
+  nodesModel,
+  canvasRect,
+}: ViewModelParams) {
   return (state: SelectionWindowViewState): ViewModel => {
     const rect = createRectFromPoints(state.startPoint, state.endPoint);
 
@@ -21,21 +25,31 @@ export function useSelectionWindowViewModel({ setViewState, nodesModel, canvasRe
       selectionWindow: rect,
       nodes: nodesModel.nodes.map((node) => ({
         ...node,
-        isSelected: isPointInRect(node, rect) || state.initialSelectedIds.has(node.id),
+        isSelected:
+          isPointInRect(node, rect) || state.initialSelectedIds.has(node.id),
       })),
 
       window: {
         onMouseMove: (e) => {
-          const currentPoint = pointOnScreenToCanvas({ x: e.clientX, y: e.clientY }, canvasRect);
+          const currentPoint = pointOnScreenToCanvas(
+            { x: e.clientX, y: e.clientY },
+            canvasRect
+          );
           setViewState({ ...state, endPoint: currentPoint });
         },
 
         onMouseUp: () => {
-          const nodesIdsInRect = nodesModel.nodes.filter((node) => isPointInRect(node, rect)).map((node) => node.id);
+          const nodesIdsInRect = nodesModel.nodes
+            .filter((node) => isPointInRect(node, rect))
+            .map((node) => node.id);
 
           setViewState(
             goToIdle({
-              selectedIds: selectItems(state.initialSelectedIds, nodesIdsInRect, "add"),
+              selectedIds: selectItems(
+                state.initialSelectedIds,
+                nodesIdsInRect,
+                "add"
+              ),
             })
           );
         },

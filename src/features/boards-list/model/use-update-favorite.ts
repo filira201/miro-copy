@@ -7,11 +7,17 @@ export function useUpdateFavorite() {
 
   const [favorite, setFavorite] = useOptimistic<Record<string, boolean>>({});
 
-  const updateFavoriteMutation = rqClient.useMutation("put", "/boards/{boardId}/favorite", {
-    onSettled: async () => {
-      await queryClient.invalidateQueries(rqClient.queryOptions("get", "/boards"));
-    },
-  });
+  const updateFavoriteMutation = rqClient.useMutation(
+    "put",
+    "/boards/{boardId}/favorite",
+    {
+      onSettled: async () => {
+        await queryClient.invalidateQueries(
+          rqClient.queryOptions("get", "/boards")
+        );
+      },
+    }
+  );
 
   const toggle = (board: { id: string; isFavorite: boolean }) => {
     startTransition(async () => {
@@ -26,7 +32,8 @@ export function useUpdateFavorite() {
     });
   };
 
-  const isOptimisticFavorite = (board: { id: string; isFavorite: boolean }) => favorite[board.id] ?? board.isFavorite;
+  const isOptimisticFavorite = (board: { id: string; isFavorite: boolean }) =>
+    favorite[board.id] ?? board.isFavorite;
 
   return {
     toggle,

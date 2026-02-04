@@ -33,7 +33,12 @@ function BoardsListPage() {
         <BoardsListLayoutHeader
           title="Последние доски"
           description="Здесь вы можете просматривать и управлять своими последними досками"
-          actions={<ViewModeToggle value={viewMode} onChange={(value) => setViewMode(value)} />}
+          actions={
+            <ViewModeToggle
+              value={viewMode}
+              onChange={(value) => setViewMode(value)}
+            />
+          }
         />
       }
     >

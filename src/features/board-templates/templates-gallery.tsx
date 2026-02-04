@@ -33,7 +33,11 @@ export function TemplatesGallery({ className }: { className?: string }) {
     <ScrollArea className={className}>
       <div className="flex gap-4">
         {templates.map((template) => (
-          <TemplateCard key={template.id} template={template} onSelect={() => {}} />
+          <TemplateCard
+            key={template.id}
+            template={template}
+            onSelect={() => {}}
+          />
         ))}
       </div>
     </ScrollArea>

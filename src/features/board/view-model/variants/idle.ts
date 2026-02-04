@@ -1,4 +1,8 @@
-import { selectItems, type Selection, type SelectionModifier } from "../../domain/selection";
+import {
+  selectItems,
+  type Selection,
+  type SelectionModifier,
+} from "../../domain/selection";
 import type { ViewModelParams } from "../view-model-params";
 import type { ViewModel } from "../view-model-type";
 import { goToAddSticker } from "./add-sticker";
@@ -15,9 +19,20 @@ export type IdleViewState = {
   };
 };
 
-export function useIdleViewModel({ setViewState, nodesModel, canvasRect }: ViewModelParams) {
-  const select = (lastState: IdleViewState, ids: string[], modif: SelectionModifier) => {
-    setViewState({ ...lastState, selectedIds: selectItems(lastState.selectedIds, ids, modif) });
+export function useIdleViewModel({
+  setViewState,
+  nodesModel,
+  canvasRect,
+}: ViewModelParams) {
+  const select = (
+    lastState: IdleViewState,
+    ids: string[],
+    modif: SelectionModifier
+  ) => {
+    setViewState({
+      ...lastState,
+      selectedIds: selectItems(lastState.selectedIds, ids, modif),
+    });
   };
 
   return (idleViewState: IdleViewState): ViewModel => ({
@@ -43,7 +58,10 @@ export function useIdleViewModel({ setViewState, nodesModel, canvasRect }: ViewM
       onMouseDown: (e) => {
         setViewState({
           ...idleViewState,
-          mouseDown: pointOnScreenToCanvas({ x: e.clientX, y: e.clientY }, canvasRect),
+          mouseDown: pointOnScreenToCanvas(
+            { x: e.clientX, y: e.clientY },
+            canvasRect
+          ),
         });
       },
       onMouseUp: () => {
@@ -55,14 +73,19 @@ export function useIdleViewModel({ setViewState, nodesModel, canvasRect }: ViewM
     window: {
       onMouseMove: (e) => {
         if (idleViewState.mouseDown) {
-          const currentPoint = pointOnScreenToCanvas({ x: e.clientX, y: e.clientY }, canvasRect);
+          const currentPoint = pointOnScreenToCanvas(
+            { x: e.clientX, y: e.clientY },
+            canvasRect
+          );
 
           if (distanceFromPoint(idleViewState.mouseDown, currentPoint) > 5) {
             setViewState(
               goToSelectionWindow({
                 startPoint: idleViewState.mouseDown,
                 endPoint: currentPoint,
-                initialSelectedIds: e.shiftKey ? idleViewState.selectedIds : undefined,
+                initialSelectedIds: e.shiftKey
+                  ? idleViewState.selectedIds
+                  : undefined,
               })
             );
           }
@@ -83,7 +106,9 @@ export function useIdleViewModel({ setViewState, nodesModel, canvasRect }: ViewM
   });
 }
 
-export function goToIdle({ selectedIds }: { selectedIds?: Selection } = {}): IdleViewState {
+export function goToIdle({
+  selectedIds,
+}: { selectedIds?: Selection } = {}): IdleViewState {
   return {
     type: "idle",
     selectedIds: selectedIds ?? new Set(),

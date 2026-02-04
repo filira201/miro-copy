@@ -1,7 +1,11 @@
 import { useState } from "react";
 import { useBoardsList } from "./model/use-boards-list";
 
-import { BoardsListLayout, BoardsListLayoutContent, BoardsListLayoutHeader } from "./ui/boards-list-layout";
+import {
+  BoardsListLayout,
+  BoardsListLayoutContent,
+  BoardsListLayoutHeader,
+} from "./ui/boards-list-layout";
 import { type ViewMode, ViewModeToggle } from "./ui/view-mode-toggle";
 
 import { BoardItem } from "./compose/board-item";
@@ -22,7 +26,12 @@ function BoardsListPage() {
         <BoardsListLayoutHeader
           title="Избранные доски"
           description="Здесь вы можете просматривать и управлять своими избранными досками"
-          actions={<ViewModeToggle value={viewMode} onChange={(value) => setViewMode(value)} />}
+          actions={
+            <ViewModeToggle
+              value={viewMode}
+              onChange={(value) => setViewMode(value)}
+            />
+          }
         />
       }
     >
@@ -33,8 +42,16 @@ function BoardsListPage() {
         cursorRef={boardsQuery.cursorRef}
         hasCursor={boardsQuery.hasNextPage}
         mode={viewMode}
-        renderList={() => boardsQuery.boards.map((board) => <BoardItem board={board} key={board.id} />)}
-        renderGrid={() => boardsQuery.boards.map((board) => <BoardCard board={board} key={board.id} />)}
+        renderList={() =>
+          boardsQuery.boards.map((board) => (
+            <BoardItem board={board} key={board.id} />
+          ))
+        }
+        renderGrid={() =>
+          boardsQuery.boards.map((board) => (
+            <BoardCard board={board} key={board.id} />
+          ))
+        }
       />
     </BoardsListLayout>
   );

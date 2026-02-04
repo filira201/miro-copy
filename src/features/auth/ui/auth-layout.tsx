@@ -1,4 +1,11 @@
-import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/shared/ui/kit/card";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+  CardFooter,
+} from "@/shared/ui/kit/card";
 import React from "react";
 
 const AuthLayout = ({
@@ -21,7 +28,9 @@ const AuthLayout = ({
         </CardHeader>
         <CardContent>{form}</CardContent>
         <CardFooter>
-          <p className="text-sm text-muted-foreground [&_a]:underline [&_a]:text-primary">{footerText}</p>
+          <p className="text-sm text-muted-foreground [&_a]:underline [&_a]:text-primary">
+            {footerText}
+          </p>
         </CardFooter>
       </Card>
     </main>

@@ -1,4 +1,7 @@
-export function pointOnScreenToCanvas(point: { x: number; y: number }, canvasRect?: { x: number; y: number }) {
+export function pointOnScreenToCanvas(
+  point: { x: number; y: number },
+  canvasRect?: { x: number; y: number }
+) {
   if (!canvasRect) return point;
   return {
     x: point.x - canvasRect.x,

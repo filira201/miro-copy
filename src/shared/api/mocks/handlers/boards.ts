@@ -10,7 +10,9 @@ function randomDate() {
 
   const end = new Date();
 
-  return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime())).toISOString();
+  return new Date(
+    start.getTime() + Math.random() * (end.getTime() - start.getTime())
+  ).toISOString();
 }
 
 // Функция для генерации случайного названия доски
@@ -66,7 +68,8 @@ function generateBoardName() {
     "Клиента",
   ];
 
-  const randomAdjective = adjectives[Math.floor(Math.random() * adjectives.length)];
+  const randomAdjective =
+    adjectives[Math.floor(Math.random() * adjectives.length)];
   const randomNoun = nouns[Math.floor(Math.random() * nouns.length)];
   const randomTheme = themes[Math.floor(Math.random() * themes.length)];
 
@@ -79,8 +82,12 @@ function generateRandomBoards(count: number): ApiSchemas["Board"][] {
 
   for (let i = 0; i < count; i++) {
     const createdAt = randomDate();
-    const updatedAt = new Date(new Date(createdAt).getTime() + Math.random() * 86400000 * 10).toISOString(); // Добавляем до 10 дней
-    const lastOpenedAt = new Date(new Date(updatedAt).getTime() + Math.random() * 86400000 * 5).toISOString(); // Добавляем до 5 дней
+    const updatedAt = new Date(
+      new Date(createdAt).getTime() + Math.random() * 86400000 * 10
+    ).toISOString(); // Добавляем до 10 дней
+    const lastOpenedAt = new Date(
+      new Date(updatedAt).getTime() + Math.random() * 86400000 * 5
+    ).toISOString(); // Добавляем до 5 дней
 
     result.push({
       id: crypto.randomUUID(),
@@ -113,13 +120,17 @@ export const boardsHandlers = [
 
     // Фильтрация по поиску
     if (search) {
-      filteredBoards = filteredBoards.filter((board) => board.name.toLowerCase().includes(search.toLowerCase()));
+      filteredBoards = filteredBoards.filter((board) =>
+        board.name.toLowerCase().includes(search.toLowerCase())
+      );
     }
 
     // Фильтрация по избранному
     if (isFavorite !== null) {
       const isFav = isFavorite === "true";
-      filteredBoards = filteredBoards.filter((board) => board.isFavorite === isFav);
+      filteredBoards = filteredBoards.filter(
+        (board) => board.isFavorite === isFav
+      );
     }
 
     // Сортировка
@@ -130,7 +141,9 @@ export const boardsHandlers = [
         } else {
           // Для дат (createdAt, updatedAt, lastOpenedAt)
           return (
-            new Date(b[sort as keyof ApiSchemas["Board"]].toString()).getTime() -
+            new Date(
+              b[sort as keyof ApiSchemas["Board"]].toString()
+            ).getTime() -
             new Date(a[sort as keyof ApiSchemas["Board"]].toString()).getTime()
           );
         }
@@ -156,7 +169,10 @@ export const boardsHandlers = [
     const board = boards.find((board) => board.id === boardId);
 
     if (!board) {
-      return HttpResponse.json({ message: "Board not found", code: "NOT_FOUND" }, { status: 404 });
+      return HttpResponse.json(
+        { message: "Board not found", code: "NOT_FOUND" },
+        { status: 404 }
+      );
     }
 
     // Обновляем lastOpenedAt при просмотре доски
@@ -188,7 +204,10 @@ export const boardsHandlers = [
     const board = boards.find((board) => board.id === boardId);
 
     if (!board) {
-      return HttpResponse.json({ message: "Board not found", code: "NOT_FOUND" }, { status: 404 });
+      return HttpResponse.json(
+        { message: "Board not found", code: "NOT_FOUND" },
+        { status: 404 }
+      );
     }
 
     const data = (await request.json()) as ApiSchemas["UpdateBoardFavorite"];
@@ -204,7 +223,10 @@ export const boardsHandlers = [
     const board = boards.find((board) => board.id === boardId);
 
     if (!board) {
-      return HttpResponse.json({ message: "Board not found", code: "NOT_FOUND" }, { status: 404 });
+      return HttpResponse.json(
+        { message: "Board not found", code: "NOT_FOUND" },
+        { status: 404 }
+      );
     }
 
     const data = (await request.json()) as ApiSchemas["RenameBoard"];
@@ -222,7 +244,10 @@ export const boardsHandlers = [
     await delay(1000);
 
     if (index === -1) {
-      return HttpResponse.json({ message: "Board not found", code: "NOT_FOUND" }, { status: 404 });
+      return HttpResponse.json(
+        { message: "Board not found", code: "NOT_FOUND" },
+        { status: 404 }
+      );
     }
 
     boards.splice(index, 1);

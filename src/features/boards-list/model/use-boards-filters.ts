@@ -1,6 +1,10 @@
 import { useState } from "react";
 
-export type BoardsSortOption = "createdAt" | "updatedAt" | "lastOpenedAt" | "name";
+export type BoardsSortOption =
+  | "createdAt"
+  | "updatedAt"
+  | "lastOpenedAt"
+  | "name";
 
 export type BoardsFilters = {
   search: string;

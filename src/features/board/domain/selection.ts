@@ -1,7 +1,11 @@
 export type SelectionModifier = "replace" | "add" | "toggle";
 export type Selection = Set<string>;
 
-export function selectItems(initialSelect: Selection, ids: string[], modif: SelectionModifier): Selection {
+export function selectItems(
+  initialSelect: Selection,
+  ids: string[],
+  modif: SelectionModifier
+): Selection {
   if (modif === "replace") {
     return new Set(ids);
   } else if (modif === "add") {

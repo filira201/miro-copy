@@ -1,14 +1,26 @@
-import { useAddStickerViewModel, type AddStickerState } from "./variants/add-sticker";
+import {
+  useAddStickerViewModel,
+  type AddStickerState,
+} from "./variants/add-sticker";
 import { useIdleViewModel, type IdleViewState } from "./variants/idle";
 import type { ViewModel } from "./view-model-type";
 import type { ViewModelParams } from "./view-model-params";
 import { useState } from "react";
-import { useSelectionWindowViewModel, type SelectionWindowViewState } from "./variants/selection-window";
+import {
+  useSelectionWindowViewModel,
+  type SelectionWindowViewState,
+} from "./variants/selection-window";
 
-export type ViewState = AddStickerState | IdleViewState | SelectionWindowViewState;
+export type ViewState =
+  | AddStickerState
+  | IdleViewState
+  | SelectionWindowViewState;
 
 export function useViewModel(params: Omit<ViewModelParams, "setViewState">) {
-  const [viewState, setViewState] = useState<ViewState>({ type: "idle", selectedIds: new Set() });
+  const [viewState, setViewState] = useState<ViewState>({
+    type: "idle",
+    selectedIds: new Set(),
+  });
 
   let viewModel: ViewModel;
 

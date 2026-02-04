@@ -8,28 +8,36 @@ type useBoardsListParams = {
   search?: string;
 };
 
-export function useBoardsList({ limit = 20, sort, isFavorite, search }: useBoardsListParams) {
-  const { fetchNextPage, data, isFetchingNextPage, isPending, hasNextPage } = rqClient.useInfiniteQuery(
-    "get",
-    "/boards",
-    {
-      params: {
-        query: {
-          page: 1,
-          limit,
-          sort,
-          isFavorite,
-          search,
+export function useBoardsList({
+  limit = 20,
+  sort,
+  isFavorite,
+  search,
+}: useBoardsListParams) {
+  const { fetchNextPage, data, isFetchingNextPage, isPending, hasNextPage } =
+    rqClient.useInfiniteQuery(
+      "get",
+      "/boards",
+      {
+        params: {
+          query: {
+            page: 1,
+            limit,
+            sort,
+            isFavorite,
+            search,
+          },
         },
       },
-    },
-    {
-      initialPageParam: 1,
-      pageParamName: "page",
-      getNextPageParam: (lastPage, _, lastPageParams) =>
-        Number(lastPageParams) < lastPage.totalPages ? Number(lastPageParams) + 1 : undefined,
-    }
-  );
+      {
+        initialPageParam: 1,
+        pageParamName: "page",
+        getNextPageParam: (lastPage, _, lastPageParams) =>
+          Number(lastPageParams) < lastPage.totalPages
+            ? Number(lastPageParams) + 1
+            : undefined,
+      }
+    );
 
   const cursorRef: RefCallback<HTMLDivElement> = useCallback(
     (node) => {
