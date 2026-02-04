@@ -1,7 +1,6 @@
 import { Button } from "@/shared/ui/kit/button";
 import { ArrowRightIcon, StickerIcon } from "lucide-react";
 import { useNodes } from "./model/nodes";
-import { useViewState } from "./model/view-state";
 import { type Ref } from "react";
 import { useCanvasRef } from "./hooks/use-canvas-rect";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/shared/ui/kit/tooltip";
@@ -9,14 +8,17 @@ import { Kbd } from "@/shared/ui/kit/kbd";
 import { useLayoutFocus } from "./hooks/use-layout-focus";
 import { cn } from "@/shared/lib/css";
 import { useViewModel } from "./view-model/use-view-model";
+import type { Rect } from "./domain/rect";
+import { useWindowEvents } from "./hooks/use-window-events";
 
 function BoardPage() {
   const nodesModel = useNodes();
-  const viewStateModel = useViewState();
   const focusLayoutRef = useLayoutFocus();
   const { canvasRef, canvasRect } = useCanvasRef();
 
-  const viewModel = useViewModel({ viewStateModel, nodesModel, canvasRect });
+  const viewModel = useViewModel({ nodesModel, canvasRect });
+
+  useWindowEvents(viewModel);
 
   return (
     <Layout ref={focusLayoutRef} onKeyDown={viewModel.layout?.onKeyDown}>
@@ -38,6 +40,7 @@ function BoardPage() {
           />
         ))}
       </Canvas>
+      {viewModel.selectionWindow && <SelectionWindow {...viewModel.selectionWindow} />}
       <Actions>
         <ActionButton
           isActive={viewModel.actions?.addSticker?.isActive}
@@ -59,6 +62,15 @@ function BoardPage() {
 }
 
 export const Component = BoardPage;
+
+export function SelectionWindow({ height, width, x, y }: Rect) {
+  return (
+    <div
+      className="absolute inset-0 bg-blue-500/30 border-2 border-blue-500"
+      style={{ width, height, transform: `translate(${x}px, ${y}px)` }}
+    ></div>
+  );
+}
 
 function Overlay({
   onClick,
